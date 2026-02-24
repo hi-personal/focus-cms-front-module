@@ -1,0 +1,13 @@
+{
+  "Modules/SampleModule/resources/css/module.css": {
+    "file": "css/module-D5yaabX3.css",
+    "src": "Modules/SampleModule/resources/css/module.css",
+    "isEntry": true
+  },
+  "Modules/SampleModule/resources/js/module.js": {
+    "file": "assets/module-Cu7UItrN.js",
+    "name": "module",
+    "src": "Modules/SampleModule/resources/js/module.js",
+    "isEntry": true
+  }
+}
