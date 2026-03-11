@@ -30,8 +30,6 @@ class ModuleServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->registerConfig();
-
-        $this->registerModuleHelpers();
     }
 
 
@@ -53,6 +51,8 @@ class ModuleServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->registerModuleHelpers();
+
         $this->registerViews();
 
         $this->registerTranslations();
