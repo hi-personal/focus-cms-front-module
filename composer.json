@@ -27,6 +27,11 @@
     "extra": {
         "module": {
             "name": "FocusCmsFrontModule"
+        },
+        "laravel": {
+            "providers": [
+                "Modules\\FocusCmsFrontModule\\Providers\\ModuleServiceProvider"
+            ]
         }
     },
     "minimum-stability": "dev",

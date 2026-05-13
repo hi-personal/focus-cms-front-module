@@ -14,7 +14,6 @@ class ModuleServiceProvider extends ServiceProvider
 
     protected string $moduleNameLower = 'focuscmsfrontmodule';
 
-
     /*
     |--------------------------------------------------------------------------
     | REGISTER
@@ -31,7 +30,6 @@ class ModuleServiceProvider extends ServiceProvider
     {
         $this->registerConfig();
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -51,6 +49,8 @@ class ModuleServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->registerRouteMiddleware();
+
         $this->registerModuleHelpers();
 
         $this->registerViews();
@@ -66,6 +66,19 @@ class ModuleServiceProvider extends ServiceProvider
         $this->registerBladeComponents();
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | ROUTE MIDDLEWARE
+    |--------------------------------------------------------------------------
+    */
+
+    protected function registerRouteMiddleware(): void
+    {
+        app('router')->aliasMiddleware(
+            'page.cache',
+            \Modules\FocusCmsFrontModule\Http\Middleware\PageCacheMiddleware::class
+        );
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -89,7 +102,6 @@ class ModuleServiceProvider extends ServiceProvider
 
         }
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -119,7 +131,6 @@ class ModuleServiceProvider extends ServiceProvider
         }
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | VIEWS
@@ -146,7 +157,6 @@ class ModuleServiceProvider extends ServiceProvider
             $path
         );
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -175,7 +185,6 @@ class ModuleServiceProvider extends ServiceProvider
         );
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | MIGRATIONS
@@ -194,7 +203,6 @@ class ModuleServiceProvider extends ServiceProvider
 
         }
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -226,7 +234,6 @@ class ModuleServiceProvider extends ServiceProvider
 
         }
     }
-
 
     /*
     |--------------------------------------------------------------------------
