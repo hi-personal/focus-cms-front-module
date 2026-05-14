@@ -109,23 +109,94 @@ class PageCacheService
     /**
      * cache path
      */
-    public function getCachePath(Request $request): string
-    {
+    // public function getCachePath(Request $request): string
+    // {
+    //     $path =
+    //         trim($request->path(), '/');
+
+    //     /*
+    //      * homepage
+    //      */
+    //     if (empty($path)) {
+
+    //         $path = 'home';
+
+    //     }
+
+    //     /*
+    //      * query params
+    //      */
+    //     $query =
+    //         $request->query();
+
+    //     $ignored =
+    //         config(
+    //             'module.focuscmsfrontmodule.page_cache.ignored_query_params',
+    //             []
+    //         );
+
+    //     foreach ($ignored as $param) {
+
+    //         unset($query[$param]);
+
+    //     }
+
+    //     if (!empty($query)) {
+
+    //         ksort($query);
+
+    //         $path .= '_'.md5(
+    //             http_build_query($query)
+    //         );
+
+    //     }
+
+    //     return rtrim(
+    //         config(
+    //             'module.focuscmsfrontmodule.page_cache.storage_path'
+    //         ),
+    //         '/'
+    //     )
+    //     .'/'
+    //     .md5($path)
+    //     .'.html';
+    // }
+
+    public function getCachePath(
+        Request $request
+    ): string {
+
         $path =
-            trim($request->path(), '/');
+            trim(
+                $request->path(),
+                '/'
+            );
 
         /*
-         * homepage
-         */
+        |--------------------------------------------------------------------------
+        | Homepage
+        |--------------------------------------------------------------------------
+        */
+
         if (empty($path)) {
 
-            $path = 'home';
+            return
+                rtrim(
+                    config(
+                        'module.focuscmsfrontmodule.page_cache.storage_path'
+                    ),
+                    '/'
+                )
+                . '/index.html';
 
         }
 
         /*
-         * query params
-         */
+        |--------------------------------------------------------------------------
+        | Query params
+        |--------------------------------------------------------------------------
+        */
+
         $query =
             $request->query();
 
@@ -141,26 +212,69 @@ class PageCacheService
 
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Query hash
+        |--------------------------------------------------------------------------
+        */
+
         if (!empty($query)) {
 
             ksort($query);
 
-            $path .= '_'.md5(
-                http_build_query($query)
-            );
+            $path .= '/'
+                . md5(
+                    http_build_query($query)
+                );
 
         }
 
-        return rtrim(
-            config(
-                'module.focuscmsfrontmodule.page_cache.storage_path'
-            ),
-            '/'
-        )
-        .'/'
-        .md5($path)
-        .'.html';
+        /*
+        |--------------------------------------------------------------------------
+        | Final path
+        |--------------------------------------------------------------------------
+        */
+
+        return
+            rtrim(
+                config(
+                    'module.focuscmsfrontmodule.page_cache.storage_path'
+                ),
+                '/'
+            )
+            . '/'
+            . $path
+            . '/index.html';
     }
+
+    // public function getCachePathByUrl(
+    //     string $url
+    // ): string {
+
+    //     $path =
+    //         parse_url(
+    //             $url,
+    //             PHP_URL_PATH
+    //         );
+
+    //     $path = trim($path, '/');
+
+    //     if (empty($path)) {
+    //         $path = 'home';
+    //     }
+
+    //     $storage_path = config('module.focuscmsfrontmodule.page_cache.storage_path');
+
+    //     if (! File::exists($storage_path) ) {
+    //      //   File::makeDirectory($storage_path, 0777, true);
+    //     }
+
+    //     return rtrim($storage_path, '/')
+    //         . '/'
+    //         . md5($path)
+    //         . '.html';
+    // }
+
 
     public function getCachePathByUrl(
         string $url
@@ -172,23 +286,41 @@ class PageCacheService
                 PHP_URL_PATH
             );
 
-        $path = trim($path, '/');
+        $path =
+            trim($path, '/');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Homepage
+        |--------------------------------------------------------------------------
+        */
 
         if (empty($path)) {
-            $path = 'home';
+
+            return
+                rtrim(
+                    config(
+                        'module.focuscmsfrontmodule.page_cache.storage_path'
+                    ),
+                    '/'
+                )
+                . '/index.html';
+
         }
 
-        $storage_path = config('module.focuscmsfrontmodule.page_cache.storage_path');
-
-        if (! File::exists($storage_path) ) {
-         //   File::makeDirectory($storage_path, 0777, true);
-        }
-
-        return rtrim($storage_path, '/')
+        return
+            rtrim(
+                config(
+                    'module.focuscmsfrontmodule.page_cache.storage_path'
+                ),
+                '/'
+            )
             . '/'
-            . md5($path)
-            . '.html';
+            . $path
+            . '/index.html';
     }
+
+
 
     /**
      * cache létezik?
