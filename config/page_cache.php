@@ -6,7 +6,7 @@
 
 return [
     'enabled' => true,
-    'storage_path' => storage_path('page-cache'),
+    'storage_path' => public_path('page-cache'),
     'cache_routes' => [
         'front.home.*',
         'post.show.*',
