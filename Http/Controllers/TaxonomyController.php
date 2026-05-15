@@ -40,13 +40,13 @@ class TaxonomyController extends Controller
         );
     }
 
-    public function show(Request $request,$term_name): View
+    public function show(Request $request,$term): View
     {
         $taxonomy = $request->route('taxonomy');
 
         $config = config("taxonomies.$taxonomy");
 
-        $term = PostTerm::findTerm($taxonomy, $term_name);
+        $term = PostTerm::findTerm($taxonomy, $term);
 
         $meta = PostTermMeta::where(
             'post_term_id',
