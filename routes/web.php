@@ -5,8 +5,12 @@
  */
 
 use Illuminate\Support\Facades\Route;
+
 use Modules\FocusCmsFrontModule\Http\Controllers\PostController;
 use Modules\FocusCmsFrontModule\Http\Controllers\TaxonomyController;
+
+use Modules\FocusCmsFrontModule\Services\Taxonomy\TaxonomyRegistry;
+
 use App\Http\Controllers\MaintenanceController;
 
 $multilang = config('app.multilang');
@@ -16,6 +20,20 @@ $locales = $multilang
     : [config('app.locale')];
 
 $defaultLocale = config('app.locale');
+
+/*
+|--------------------------------------------------------------------------
+| Validated taxonomies
+|--------------------------------------------------------------------------
+*/
+
+$taxonomies = app(TaxonomyRegistry::class)->all();
+
+/*
+|--------------------------------------------------------------------------
+| Localized routes
+|--------------------------------------------------------------------------
+*/
 
 foreach ($locales as $locale) {
 
@@ -29,11 +47,16 @@ foreach ($locales as $locale) {
         $middleware[] = 'setLocale';
     }
 
-    $middleware[] = \Modules\FocusCmsFrontModule\Http\Middleware\PageCacheMiddleware::class;
+    $middleware[] =
+        \Modules\FocusCmsFrontModule\Http\Middleware\PageCacheMiddleware::class;
 
     Route::prefix($prefix)
         ->middleware($middleware)
-        ->group(function () use ($locale, $defaultLocale) {
+        ->group(function () use (
+            $locale,
+            $defaultLocale,
+            $taxonomies
+        ) {
 
         /*
         |--------------------------------------------------------------------------
@@ -41,7 +64,8 @@ foreach ($locales as $locale) {
         |--------------------------------------------------------------------------
         */
 
-        Route::get('/',
+        Route::get(
+            '/',
             [PostController::class,'home']
         )
         ->defaults('locale',$locale)
@@ -49,11 +73,11 @@ foreach ($locales as $locale) {
 
         /*
         |--------------------------------------------------------------------------
-        | Taxonomy routes (dynamic)
+        | Taxonomy routes
         |--------------------------------------------------------------------------
         */
 
-        foreach(config('taxonomies') as $taxonomyKey => $taxonomy){
+        foreach($taxonomies as $taxonomyKey => $taxonomy){
 
             if(!($taxonomy['route']['enabled'] ?? false)){
                 continue;
@@ -63,7 +87,7 @@ foreach ($locales as $locale) {
                 ?? $taxonomy['route']['slug'][$defaultLocale];
 
             Route::get(
-                "/$slug",
+                "/{$slug}",
                 [TaxonomyController::class,'index']
             )
             ->defaults('locale',$locale)
@@ -71,7 +95,7 @@ foreach ($locales as $locale) {
             ->name("taxonomy.$taxonomyKey.index.$locale");
 
             Route::get(
-                "/$slug/{term}",
+                "/{$slug}/{term}",
                 [TaxonomyController::class,'show']
             )
             ->defaults('locale',$locale)
@@ -89,7 +113,7 @@ foreach ($locales as $locale) {
             ?? config("post.post.route.slug.$defaultLocale");
 
         Route::get(
-            "/$postSlug/{slug}",
+            "/{$postSlug}/{slug}",
             [PostController::class,'show']
         )
         ->defaults('locale',$locale)

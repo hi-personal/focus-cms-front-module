@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Route;
 
+use Modules\FocusCmsFrontModule\Services\Taxonomy\TaxonomyRegistry;
+
 class ModuleServiceProvider extends ServiceProvider
 {
     protected string $moduleName = 'FocusCmsFrontModule';
@@ -23,12 +25,24 @@ class ModuleServiceProvider extends ServiceProvider
     | Ide kerül:
     | - config merge
     | - helper functions
+    | - service container bindings
     |
     */
 
     public function register(): void
     {
         $this->registerConfig();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Taxonomy Registry
+        |--------------------------------------------------------------------------
+        */
+
+        $this->app->singleton(
+            TaxonomyRegistry::class,
+            fn () => new TaxonomyRegistry()
+        );
     }
 
     /*
@@ -92,7 +106,7 @@ class ModuleServiceProvider extends ServiceProvider
             "Modules/{$this->moduleName}/Helpers"
         );
 
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             return;
         }
 
@@ -115,7 +129,7 @@ class ModuleServiceProvider extends ServiceProvider
             "Modules/{$this->moduleName}/config"
         );
 
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             return;
         }
 
@@ -143,7 +157,7 @@ class ModuleServiceProvider extends ServiceProvider
             "Modules/{$this->moduleName}/resources/views"
         );
 
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             return;
         }
 
@@ -170,7 +184,7 @@ class ModuleServiceProvider extends ServiceProvider
             "Modules/{$this->moduleName}/resources/lang"
         );
 
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             return;
         }
 
@@ -216,7 +230,7 @@ class ModuleServiceProvider extends ServiceProvider
             "Modules/{$this->moduleName}/Console/Commands"
         );
 
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             return;
         }
 
@@ -247,7 +261,7 @@ class ModuleServiceProvider extends ServiceProvider
             "Modules/{$this->moduleName}/Classes/Components"
         );
 
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             return;
         }
 

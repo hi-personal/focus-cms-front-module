@@ -40,21 +40,13 @@ class TaxonomyController extends Controller
         );
     }
 
-    public function show(Request $request,$term): View
+    public function show(Request $request,$term_name): View
     {
         $taxonomy = $request->route('taxonomy');
 
         $config = config("taxonomies.$taxonomy");
 
-        $term = PostTerm::where(
-            'post_taxonomy_name',
-            $taxonomy
-        )
-        ->where(
-            'name',
-            $term
-        )
-        ->firstOrFail();
+        $term = PostTerm::findTerm($taxonomy, $term_name);
 
         $meta = PostTermMeta::where(
             'post_term_id',
@@ -77,6 +69,7 @@ class TaxonomyController extends Controller
 
         if($config['hierarchical']){
             $posts = $query
+                ->currentLang()
                 ->paginate($postsPerPage)
                 ->withQueryString();
         }
