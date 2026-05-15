@@ -51,13 +51,8 @@ class TaxonomyController extends Controller
 
         $term = PostTerm::findTerm($taxonomy, $term);
 
-        $meta = PostTermMeta::where(
-            'post_term_id',
-            $term->id
-        )
-        ->pluck(
-            'value',
-            'name'
+        $meta = $term->metaCollection(
+            cms_locale()
         );
 
         $postsPerPage = Option::getValue(
