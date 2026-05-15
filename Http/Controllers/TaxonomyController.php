@@ -48,8 +48,8 @@ class TaxonomyController extends Controller
         $taxonomy = $request->route('taxonomy');
 
         $config = config("taxonomies.$taxonomy");
-        $term_name = $term;
-        $term = PostTerm::findTerm($taxonomy, $term_name);
+
+        $term = PostTerm::findTerm($taxonomy, $term);
 
         $meta = PostTermMeta::where(
             'post_term_id',
